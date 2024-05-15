@@ -1,0 +1,117 @@
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import Validation from "./LoginValidation";
+import axios from "axios";
+
+function Login() {
+  const [values, setValues] = useState({
+    email: "",
+    password: "",
+  });
+  const navigate = useNavigate();
+  const [errors, setErrors] = useState({});
+
+  const handleInput = (event) => {
+    setValues((prev) => ({ ...prev, [event.target.name]: event.target.value }));
+  };
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const err = Validation(values);
+    setErrors(err);
+    // if (err.name === "" && err.email === "" && err.password === "") {
+    axios
+      .post("http://localhost:8081/login", values)
+      .then((res) => {
+        if (res.data === "Success") {
+          navigate("/home");
+        } else {
+          alert("No record existed");
+        }
+      })
+      .catch((err) => console.log(err));
+
+    // }
+  };
+  return (
+    // <div className="d-flex justify-content-center align-items-center bg-secondary bg-gradient vh-100">
+    //      <div className="bg-white p-3 rounded w-25">
+    //         <h2>Sign-In</h2>
+    //         <form action="" onSubmit={handleSubmit}>
+    //             <div className="mb-3">
+    //                 <label htmlFor="email"><strong>Email</strong></label>
+    //                 <input type="email" placeholder="Enter Your mail" name="email"
+    //                 onChange={handleInput} className="form-control rounded-0"/>
+    //                 {errors.email && <span className="text-danger">{errors.email}</span>}
+    //             </div>
+    //             <div className="mb-3">
+    //                 <label htmlFor="password"><strong>Password</strong></label>
+    //                 <input type="password" placeholder="Enter Your Password" name="password"
+    //               onChange={handleInput} className="form-control rounded-0"/>
+    //               {errors.password && <span className="text-danger">{errors.password}</span>}
+    //             </div>
+    //             <button type="submit" className="btn btn-success w-100 rounded-0"><strong>Log in</strong></button>
+    //             <p>You agree to our terms and policies</p>
+    //             <Link to="/signup" className="btn btn-default border w-100 bg-light rounded-0 text-decoration-none">Create Account</Link>
+    //         </form>
+    //     </div>
+    // </div>
+    <div className="flex justify-center items-center bg-secondary bg-gradient h-screen">
+    <div className="bg-red-300 p-16 w-[33%] border-slate-200 rounded-lg border-2">
+      <h2 className="text-xl font-bold">Sign-In</h2>
+      <form onSubmit={handleSubmit}>
+        <div className="mb-6"> {/* Increased the margin bottom to create space */}
+          <label htmlFor="email" className="font-bold block mb-1"> {/* Added block display */}
+            Email
+          </label>
+          <input
+            type="email"
+            placeholder="Enter Your Email"
+            name="email"
+            onChange={handleInput}
+            className="form-control rounded-0 border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          />
+          {errors.email && (
+            <span className="text-danger">{errors.email}</span>
+          )}
+        </div>
+        <div className="mb-6"> {/* Increased the margin bottom to create space */}
+          <label htmlFor="password" className="font-bold block mb-1"> {/* Added block display */}
+            Password
+          </label>
+          <input
+            type="password"
+            placeholder="Enter Your Password"
+            name="password"
+            onChange={handleInput}
+            className="form-control rounded-0 border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          />
+          {errors.password && (
+            <span className="text-danger">{errors.password}</span>
+          )}
+        </div>
+        <div className="flex justify-center item-center"> {/* Added margin bottom to create space */}
+          <button
+            type="submit"
+            className="text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-7 py-2.5 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+          >
+            <strong>Log in</strong>
+          </button>
+        </div>
+        <p className="mb-6 text-center font-bold"> {/* Added margin bottom and centered text */}
+          You agree to our terms and policies
+        </p>
+        <div className="flex justify-center"> {/* Centered the link */}
+          <Link
+            to="/signup"
+            className="btn btn-default border bg-light rounded-0 text-decoration-none inline-block hover:bg-blue-500 font-bold"
+          >
+            Create Account
+          </Link>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  );
+}
+export default Login;
